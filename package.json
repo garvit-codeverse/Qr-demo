@@ -1,11 +1,11 @@
 {
-  "name": "qr-demo",
+  "name": "qr-pro",
   "version": "1.0.0",
   "engines": {
-    "node": "18.x"
+    "node": "22.x"
   },
   "dependencies": {
     "qrcode": "^1.5.4",
-    "sharp": "^0.31.3"
+    "sharp": "^0.33.5"
   }
 }
