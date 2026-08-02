@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
       },
     });
 
-    const logoPath = path.resolve(process.cwd(), 'logo.png');
+    const logoPath = path.resolve(process.cwd(), 'FamPay.png');
     const logoSize = Math.floor(parseInt(size) * 0.22);
     const logoBufferResized = await sharp(logoPath)
       .resize(logoSize, logoSize)
