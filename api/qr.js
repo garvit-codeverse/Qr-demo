@@ -20,29 +20,33 @@ module.exports = async (req, res) => {
       color: { dark: darkColor, light: lightColor },
     });
 
-    let finalBuffer = qrBuffer; // Default sirf QR
+    let finalBuffer = qrBuffer;
 
-    // Check karo ki logo file exist karti hai ya nahi
+    // Logo optional hai - agar file nahi milegi toh sirf QR generate hoga
     const logoPath = path.resolve(process.cwd(), 'FamPay.png');
     if (fs.existsSync(logoPath)) {
-      const logoSize = Math.floor(parseInt(size) * 0.22);
-      const logoBufferResized = await sharp(logoPath).resize(logoSize, logoSize).toBuffer();
+      try {
+        const logoSize = Math.floor(parseInt(size) * 0.22);
+        const logoBufferResized = await sharp(logoPath).resize(logoSize, logoSize).toBuffer();
 
-      const circleSvg = Buffer.from(`
-        <svg width="${logoSize}" height="${logoSize}">
-          <circle cx="${logoSize/2}" cy="${logoSize/2}" r="${logoSize/2}" fill="white"/>
-        </svg>
-      `);
+        const circleSvg = Buffer.from(`
+          <svg width="${logoSize}" height="${logoSize}">
+            <circle cx="${logoSize/2}" cy="${logoSize/2}" r="${logoSize/2}" fill="white"/>
+          </svg>
+        `);
 
-      const circularLogoBuffer = await sharp(logoBufferResized)
-        .composite([{ input: circleSvg, blend: 'dest-in' }])
-        .png()
-        .toBuffer();
+        const circularLogoBuffer = await sharp(logoBufferResized)
+          .composite([{ input: circleSvg, blend: 'dest-in' }])
+          .png()
+          .toBuffer();
 
-      finalBuffer = await sharp(qrBuffer)
-        .composite([{ input: circularLogoBuffer, gravity: 'centre' }])
-        .png()
-        .toBuffer();
+        finalBuffer = await sharp(qrBuffer)
+          .composite([{ input: circularLogoBuffer, gravity: 'centre' }])
+          .png()
+          .toBuffer();
+      } catch (logoErr) {
+        console.log("Logo skip kar diya, sirf QR generate ho raha hai");
+      }
     }
 
     res.setHeader('Content-Type', 'image/png');
