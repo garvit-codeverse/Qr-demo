@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "api/qr.js": {
-      "runtime": "nodejs22.x"
-    }
-  }
-}
